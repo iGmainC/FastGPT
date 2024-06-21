@@ -12,6 +12,7 @@ export const getWorker = (name: WorkerNameEnum) => {
   return new Worker(workerPath);
 };
 
+// COMT: 实际创建worker的方法，传入worker的名字和参数
 export const runWorker = <T = any>(name: WorkerNameEnum, params?: Record<string, any>) => {
   return new Promise<T>((resolve, reject) => {
     const worker = getWorker(name);

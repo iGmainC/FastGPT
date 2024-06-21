@@ -14,6 +14,12 @@ export const hashStr = (str: string) => {
 };
 
 /* simple text, remove chinese space and extra \n */
+// COMT: 简化文本，去除全角空格和多余的换行
+/**
+ * 简化文本，去除全角空格和多余的换行
+ * @param text 要处理的文本
+ * @returns 
+ */
 export const simpleText = (text = '') => {
   text = text.trim();
   text = text.replace(/([\u4e00-\u9fa5])[\s&&[^\n]]+([\u4e00-\u9fa5])/g, '$1$2');

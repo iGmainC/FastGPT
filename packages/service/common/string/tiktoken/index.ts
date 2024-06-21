@@ -42,6 +42,7 @@ export const getTiktokenWorker = () => {
   return global.tiktokenWorkers[i - 1];
 };
 
+// COMT: 计算token数量，适用于GPT，把token计算也放到worker中
 export const countGptMessagesTokens = (
   messages: ChatCompletionMessageParam[],
   tools?: ChatCompletionTool[],
@@ -97,6 +98,7 @@ export const countMessagesTokens = (messages: ChatItemType[]) => {
 };
 
 /* count one prompt tokens */
+// COMT: 计算一个prompt的token数量
 export const countPromptTokens = async (
   prompt: string | ChatCompletionContentPart[] | null | undefined = '',
   role: '' | `${ChatCompletionRequestMessageRoleEnum}` = ''

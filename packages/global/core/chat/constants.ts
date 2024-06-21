@@ -1,3 +1,4 @@
+// COMT: Chat角色的类型
 export enum ChatRoleEnum {
   System = 'System',
   Human = 'Human',

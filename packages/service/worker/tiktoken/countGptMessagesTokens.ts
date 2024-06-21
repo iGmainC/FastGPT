@@ -13,6 +13,7 @@ import { parentPort } from 'worker_threads';
 const enc = new Tiktoken(cl100k_base.bpe_ranks, cl100k_base.special_tokens, cl100k_base.pat_str);
 
 /* count messages tokens */
+// COMT: 计算token数量的worker
 parentPort?.on(
   'message',
   ({

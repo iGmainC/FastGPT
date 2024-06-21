@@ -44,6 +44,7 @@ export const pushDataListToTrainingQueueByCollectionId = async ({
   });
 };
 
+// COMT: 将切片好的数据插入到训练队列中
 export async function pushDataListToTrainingQueue({
   teamId,
   tmbId,
@@ -65,16 +66,16 @@ export async function pushDataListToTrainingQueue({
   session?: ClientSession;
 } & PushDatasetDataProps): Promise<PushDatasetDataResponse> {
   const checkModelValid = async () => {
-    const agentModelData = getLLMModel(agentModel);
+    const agentModelData = getLLMModel(agentModel); // 获取LLM模型
     if (!agentModelData) {
       return Promise.reject(`File model ${agentModel} is inValid`);
     }
-    const vectorModelData = getVectorModel(vectorModel);
+    const vectorModelData = getVectorModel(vectorModel); // 获取向量化模型
     if (!vectorModelData) {
       return Promise.reject(`Vector model ${vectorModel} is inValid`);
     }
 
-    if (trainingMode === TrainingModeEnum.chunk) {
+    if (trainingMode === TrainingModeEnum.chunk) {// 如果是切片模式走向量化的逻辑
       return {
         maxToken: vectorModelData.maxToken * 1.3,
         model: vectorModelData.model,
@@ -82,7 +83,7 @@ export async function pushDataListToTrainingQueue({
       };
     }
 
-    if (trainingMode === TrainingModeEnum.qa || trainingMode === TrainingModeEnum.auto) {
+    if (trainingMode === TrainingModeEnum.qa || trainingMode === TrainingModeEnum.auto) { // 如果是问答模式或者自动模式走LLM的逻辑
       return {
         maxToken: agentModelData.maxContext * 0.8,
         model: agentModelData.model,
@@ -97,10 +98,11 @@ export async function pushDataListToTrainingQueue({
 
   // format q and a, remove empty char
   data.forEach((item) => {
+    // 格式化问题和答案，去除空字符
     item.q = simpleText(item.q);
     item.a = simpleText(item.a);
 
-    item.indexes = item.indexes
+    item.indexes = item.indexes // 格式化索引，去除空字符
       ?.map((index) => {
         return {
           ...index,
@@ -121,7 +123,7 @@ export async function pushDataListToTrainingQueue({
 
   // filter repeat content
   data.forEach((item) => {
-    if (!item.q) {
+    if (!item.q) { // 如果问题为空，直接加入到错误列表中，不做处理
       filterResult.error.push(item);
       return;
     }
@@ -131,15 +133,15 @@ export async function pushDataListToTrainingQueue({
     // count q token
     const token = item.q.length;
 
-    if (token > maxToken) {
+    if (token > maxToken) {// 如果问题的长度超过了最大token，加入到超过token的列表中
       filterResult.overToken.push(item);
       return;
     }
 
-    if (set.has(text)) {
+    if (set.has(text)) {// 如果set中已经存在了这个问题，加入到重复的列表中
       console.log('repeat', item);
       filterResult.repeat.push(item);
-    } else {
+    } else { // 否则加入到成功列表中
       filterResult.success.push(item);
       set.add(text);
     }

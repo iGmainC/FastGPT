@@ -16,6 +16,7 @@ import { mongoSessionRun } from '@fastgpt/service/common/mongo/sessionRun';
 import { DatasetTrainingSchemaType } from '@fastgpt/global/core/dataset/type';
 import { Document } from '@fastgpt/service/common/mongo';
 
+// COMT: 减小队列，来限制并发
 const reduceQueue = () => {
   global.vectorQueueLen = global.vectorQueueLen > 0 ? global.vectorQueueLen - 1 : 0;
 
@@ -23,6 +24,7 @@ const reduceQueue = () => {
 };
 
 /* 索引生成队列。每导入一次，就是一个单独的线程 */
+// COMT: 生成向量的关键函数
 export async function generateVector(): Promise<any> {
   const max = global.systemEnv?.vectorMaxProcess || 10;
   if (global.vectorQueueLen >= max) return;
@@ -36,7 +38,7 @@ export async function generateVector(): Promise<any> {
     error = false
   } = await (async () => {
     try {
-      const data = await MongoDatasetTraining.findOneAndUpdate(
+      const data = await MongoDatasetTraining.findOneAndUpdate( // 查询出一个数据，然后更新lockTime
         {
           mode: TrainingModeEnum.chunk,
           lockTime: { $lte: addMinutes(new Date(), -1) }
@@ -59,7 +61,7 @@ export async function generateVector(): Promise<any> {
         billId: 1
       });
 
-      // task preemption
+      // 任务抢占
       if (!data) {
         return {
           done: true
@@ -118,7 +120,7 @@ export async function generateVector(): Promise<any> {
       time: Date.now() - start
     });
 
-    reduceQueue();
+    reduceQueue(); // 队列num-1
     generateVector();
   } catch (err: any) {
     reduceQueue();

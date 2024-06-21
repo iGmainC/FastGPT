@@ -2,6 +2,7 @@ import timezones from 'timezones-list';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+// COMT: 时间相关的工具函数
 
 dayjs.extend(utc);
 dayjs.extend(timezone);

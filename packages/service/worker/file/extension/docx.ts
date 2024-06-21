@@ -5,6 +5,7 @@ import { html2md } from '../../htmlStr2Md/utils';
 /**
  * read docx to markdown
  */
+// COMT: 读取docx文件的最底层方法，输出为ReadFileResponse
 export const readDocsFile = async ({ buffer }: ReadRawTextByBuffer): Promise<ReadFileResponse> => {
   try {
     const { value: html } = await mammoth.convertToHtml({

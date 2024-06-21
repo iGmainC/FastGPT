@@ -15,6 +15,8 @@ const getVectorObj = () => {
 
 const Vector = getVectorObj();
 
+// COMT: 向量数据库操作的对外抽象接口
+
 export const initVectorStore = Vector.init;
 export const deleteDatasetDataVector = Vector.delete;
 export const recallFromVectorStore = Vector.embRecall;

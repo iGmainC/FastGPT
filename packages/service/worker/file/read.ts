@@ -8,6 +8,8 @@ import { readPptxRawText } from './extension/pptx';
 import { readXlsxRawText } from './extension/xlsx';
 import { readCsvRawText } from './extension/csv';
 
+// COMT: 这里使用了worker_threads，在worker_threads中，parentPort是一个MessagePort实例，它允许你与父线程通信
+// COMT: 读取文件中文本的方法，根据文件后缀调用不同的读取
 parentPort?.on('message', async (props: ReadRawTextProps<Uint8Array>) => {
   const readRawContentByFileBuffer = async (params: ReadRawTextByBuffer) => {
     switch (params.extension) {

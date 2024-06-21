@@ -78,6 +78,7 @@ const parsePowerPoint = async ({
   return responseArr.join('\n');
 };
 
+// COMT: 解析 office 文件（主要是PPT）
 export const parseOffice = async ({
   buffer,
   encoding,

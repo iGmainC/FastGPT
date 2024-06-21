@@ -128,6 +128,7 @@ export async function getDownloadStream({
   };
 }
 
+// COMT: 从MongoDB中读取文件，并将文件内容提取为字符串，文件直接存储在MongoDB的GridFS中
 export const readFileContentFromMongo = async ({
   teamId,
   bucketName,

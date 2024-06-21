@@ -3,6 +3,7 @@ import { addLog } from '../../../common/system/log';
 import { getErrText } from '@fastgpt/global/common/error/utils';
 import { MongoDatasetTraining } from './schema';
 import Papa from 'papaparse';
+// COMT: papaparse是一个csv解析库，这里用来解析csv文件
 
 export const checkInvalidChunkAndLock = async ({
   err,

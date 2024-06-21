@@ -2,6 +2,8 @@ import TurndownService from 'turndown';
 const domino = require('domino-ext');
 const turndownPluginGfm = require('joplin-turndown-plugin-gfm');
 
+
+// COMT: 将 HTML 转换为 Markdown
 export const html2md = (html: string): string => {
   const turndownService = new TurndownService({
     headingStyle: 'atx',

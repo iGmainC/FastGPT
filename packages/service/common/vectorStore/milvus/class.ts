@@ -14,6 +14,8 @@ import type {
 import { delay } from '@fastgpt/global/common/system/utils';
 import { addLog } from '../../../common/system/log';
 
+
+// COMT: Milvus的控制器，做最底层的操作
 export class MilvusCtrl {
   constructor() {}
   getClient = async () => {

@@ -79,9 +79,10 @@ export type PgSearchRawType = {
   collection_id: string;
   score: number;
 };
+// COMT: 塞到数据库里单条数据的结构
 export type PushDatasetDataChunkProps = {
-  q: string; // embedding content
-  a?: string; // bonus content
+  q: string; // q是embedding的内容
+  a?: string; // a是增强的内容
   chunkIndex?: number;
   indexes?: Omit<DatasetDataIndexItemType, 'dataId'>[];
 };

@@ -8,6 +8,7 @@ export function getMongoImgUrl(id: string) {
 }
 
 export const maxImgSize = 1024 * 1024 * 12;
+// COMT: 上传图片到mongo
 export async function uploadMongoImg({
   type,
   base64Img,

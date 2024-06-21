@@ -19,6 +19,7 @@ import { UsageSourceEnum } from '@fastgpt/global/support/wallet/usage/constants'
 import { getLLMModel, getVectorModel } from '@fastgpt/service/core/ai/model';
 import { rawText2Chunks } from '@fastgpt/service/core/dataset/read';
 
+// COMT: 创建知识库中数据集的api
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   const { datasetId, parentId, fileId } = req.body as FileIdCreateDatasetCollectionParams;
   const trainingType = TrainingModeEnum.chunk;
@@ -26,6 +27,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   try {
     await connectToDatabase();
 
+    // COMT: 鉴权
     const { teamId, tmbId, dataset } = await authDataset({
       req,
       authToken: true,
@@ -34,7 +36,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       datasetId: datasetId
     });
 
-    // 1. read file
+    // COMT: 从mongo中读取文件内容，并转换为文本
     const { rawText, filename } = await readFileContentFromMongo({
       teamId,
       bucketName: BucketNameEnum.dataset,
@@ -43,19 +45,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     });
     console.log(rawText);
     // 2. split chunks
+    // COMT: 切分文本为Chunks
     const chunks = rawText2Chunks({
       rawText,
       isQAImport: true
     });
 
     // 3. auth limit
+    // COMT: 检查数据集的限制，这应该主要是pro版的限制
     await checkDatasetLimit({
       teamId,
       insertLen: predictDataLimitLength(trainingType, chunks)
     });
-
+    // COMT: 使用mongo事务，创建知识库中的数据集
     await mongoSessionRun(async (session) => {
       // 4. create collection
+      // COMT: 创建知识库中的数据集
       const { _id: collectionId } = await createOneCollection({
         teamId,
         tmbId,
@@ -64,15 +69,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
         datasetId,
         type: DatasetCollectionTypeEnum.file,
         fileId,
-
         // special metadata
         trainingType,
         chunkSize: 0,
-
         session
       });
 
       // 5. create training bill
+      // COMT: 创建训练账单
       const { billId } = await createTrainingUsage({
         teamId,
         tmbId,
@@ -84,6 +88,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       });
 
       // 6. insert to training queue
+      // COMT: 将数据插入到训练队列中，切分完的chunk片
       await pushDataListToTrainingQueue({
         teamId,
         tmbId,

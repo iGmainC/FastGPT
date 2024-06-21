@@ -13,6 +13,7 @@ type TokenType = {
   hasEOL: boolean;
 };
 
+// COMT: 读取pdf文件的最底层方法，输出为ReadFileResponse
 export const readPdfFile = async ({ buffer }: ReadRawTextByBuffer): Promise<ReadFileResponse> => {
   const readPDFPage = async (doc: any, pageNo: number) => {
     try {

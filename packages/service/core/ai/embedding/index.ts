@@ -11,8 +11,10 @@ type GetVectorProps = {
 };
 
 // text to vector
+// COMT: 从文本获取向量的最底层函数
+
 export async function getVectorsByText({ model, input, type }: GetVectorProps) {
-  if (!input) {
+  if (!input) {// 如果输入为空
     return Promise.reject({
       code: 500,
       message: 'input is empty'
@@ -23,6 +25,7 @@ export async function getVectorsByText({ model, input, type }: GetVectorProps) {
     const ai = getAIApi();
 
     // input text to vector
+    // 从文本获取向量
     const result = await ai.embeddings
       .create({
         ...model.defaultConfig,
@@ -43,13 +46,13 @@ export async function getVectorsByText({ model, input, type }: GetVectorProps) {
         }
 
         const [tokens, vectors] = await Promise.all([
-          countPromptTokens(input),
+          countPromptTokens(input), // 计算token数量
           Promise.all(res.data.map((item) => unityDimensional(item.embedding)))
         ]);
 
         return {
-          tokens,
-          vectors
+          tokens, // token数量？大概是
+          vectors // 向量
         };
       });
 

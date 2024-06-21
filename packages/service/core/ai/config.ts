@@ -3,6 +3,7 @@ import OpenAI from '@fastgpt/global/core/ai';
 
 export const openaiBaseUrl = process.env.OPENAI_BASE_URL || 'https://api.openai.com/v1';
 
+// COMT: 使用用户的key获取AI实例(返回OpenAI实例)
 export const getAIApi = (props?: {
   userKey?: UserModelSchema['openaiAccount'];
   timeout?: number;
